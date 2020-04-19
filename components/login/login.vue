@@ -35,10 +35,11 @@ export default {
 	methods: {
 		async handleLogin1() {
       const res = await this.$http.post("loign", this.formdata);
-      const {data,meta} = {} ...
+      const {data,meta} = {}
 		},
 		handleLogin() {
-			this.$router.push({ name: "home" });
+      this.$router.push({ name: "home" });
+      localStorage.setItem('token','mytoken')
 			return;
 			//希望让异步操作的代码看起来像同步代码
 			//es7  async await  见handleLogin1
@@ -52,7 +53,10 @@ export default {
 					//找到res.data.meta
 					// const {meta:obj}={meta:{mag:'11',status:900}}   把{mag:'11',status:900}赋给meta,,==>obj={mag:'11',status:900}
 					// const {meta:{msg,status}}={meta:{mag:'11',status:900}}==>msg:'11',status=>200
-					//登录成功  跳转home
+          //登录成功  跳转home
+          //保存token
+
+        localStorage.setItem('token',data.token)
 					//提示成功
 					if (status === 200) {
 						//登陆成功  跳转home
