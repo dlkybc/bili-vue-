@@ -30,14 +30,21 @@ export default {
 			},
 		};
 	},
+	created() {},
 	mounted() {},
 	methods: {
+		async handleLogin1() {
+      const res = await this.$http.post("loign", this.formdata);
+      const {data,meta} = {} ...
+		},
 		handleLogin() {
-this.$router.push({name:'home'})
-      return
+			this.$router.push({ name: "home" });
+			return;
+			//希望让异步操作的代码看起来像同步代码
+			//es7  async await  见handleLogin1
+
 			this.$http.post("loign", this.formdata).then(
 				(res) => {
-					console.log(res);
 					const {
 						data,
 						meta: { msg, status },
@@ -48,14 +55,14 @@ this.$router.push({name:'home'})
 					//登录成功  跳转home
 					//提示成功
 					if (status === 200) {
-            //登陆成功  跳转home
-            // this.$router.push({name:'home'})
-            //提示成功
-            this.$message.success(msg);
-					}else{
-            //登录失败  提示原因
-              this.$message.error(msg);
-          }
+						//登陆成功  跳转home
+						// this.$router.push({name:'home'})
+						//提示成功
+						this.$message.success(msg);
+					} else {
+						//登录失败  提示原因
+						this.$message.error(msg);
+					}
 					//登录失败  提示原因
 				},
 				(err) => {
