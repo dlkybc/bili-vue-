@@ -33,6 +33,8 @@ export default {
 	mounted() {},
 	methods: {
 		handleLogin() {
+this.$router.push({name:'home'})
+      return
 			this.$http.post("loign", this.formdata).then(
 				(res) => {
 					console.log(res);
@@ -47,7 +49,7 @@ export default {
 					//提示成功
 					if (status === 200) {
             //登陆成功  跳转home
-            this.$router.push({name:'home'})
+            // this.$router.push({name:'home'})
             //提示成功
             this.$message.success(msg);
 					}else{
