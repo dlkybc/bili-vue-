@@ -96,7 +96,15 @@
 	</el-container>
 </template>
 <script>
-export default {};
+export default {
+  //组件渲染之前  mounted之前就行
+  beforeCreate() {
+    const token = localStorage.getItem('token')
+    if(!token){
+      this.$router.push({name:'login'})
+    }
+  },
+};
 </script>
 <style lang="scss">
 .container {
