@@ -14,7 +14,7 @@
 				<el-col :span="18" class="middle">电商后台管理系统 </el-col>
 				<el-col :span="2"
 					><div class="grid-content bg-purple">
-						<a href="" class="loginout">退出</a>
+						<a href="" class="loginout" @click.prevent="cancelSign">退出</a>
 					</div></el-col
 				>
 			</el-row>
@@ -101,6 +101,14 @@ export default {
   beforeCreate() {
     const token = localStorage.getItem('token')
     if(!token){
+      this.$router.push({name:'login'})
+    }
+  },
+  methods: {
+    cancelSign(){
+      //清除token  提示一下   来到login
+      localStorage.clear()
+      this.$message.success('退出成功')
       this.$router.push({name:'login'})
     }
   },
