@@ -10,10 +10,22 @@
 		<!-- 搜索 -->
 		<el-row class="searchRow">
 			<el-col>
-				<el-input placeholder="请输入内容" v-model="query" class="inputSearch">
-					<el-button slot="append" icon="el-icon-search"></el-button>
+				<el-input
+					placeholder="请输入内容"
+					v-model="query"
+					class="inputSearch"
+					clearable
+					@clear="loadlist"
+				>
+					<el-button
+						slot="append"
+						icon="el-icon-search"
+						@click="searchUser"
+					></el-button>
 				</el-input>
-				<el-button type="success">添加用户{{ date1 | fmtdate }}</el-button>
+				<el-button type="success" @click="showAddUserDialog"
+					>添加用户{{ date1 | fmtdate }}</el-button
+				>
 			</el-col>
 		</el-row>
 		<!-- 表格 -->
@@ -71,6 +83,7 @@ slot-scope会自动去找上一级数据源，肯定会找到userlist ,所以写
 						type="danger"
 						icon="el-icon-delete"
 						circle
+						@click="showDeleteUserMsgBox(scope.row.id)"
 					></el-button>
 				</template>
 			</el-table-column>
@@ -86,6 +99,29 @@ slot-scope会自动去找上一级数据源，肯定会找到userlist ,所以写
 			:total="userList.length"
 		>
 		</el-pagination>
+		<!-- 对话框 -->
+		<!-- 添加用户对话框 -->
+		<el-dialog title="添加用户" :visible.sync="dialogFormVisibleAdd">
+			<el-form :model="form">
+				<el-form-item label="用户名" label-width="100px">
+					<el-input v-model="form.username" autocomplete="off"></el-input>
+				</el-form-item>
+				<el-form-item label="密码" label-width="100px">
+					<el-input v-model="form.password" autocomplete="off"></el-input>
+				</el-form-item>
+				<el-form-item label="邮箱" label-width="100px">
+					<el-input v-model="form.email" autocomplete="off"></el-input>
+				</el-form-item>
+				<el-form-item label="电话" label-width="100px">
+					<el-input v-model="form.mobile" autocomplete="off"></el-input>
+				</el-form-item>
+			</el-form>
+			<div slot="footer" class="dialog-footer">
+				<el-button @click="dialogFormVisibleAdd = false">取 消</el-button>
+				<el-button type="primary" @click="addUser">确 定</el-button>
+			</div>
+		</el-dialog>
+		<!-- 删除用户确认框 -->
 	</el-card>
 </template>
 <script>
@@ -103,6 +139,7 @@ export default {
 					phone: 15554320000,
 					status: true,
 					done: "操作",
+					id:1
 				},
 				{
 					date: "2016-05-04",
@@ -112,6 +149,7 @@ export default {
 					phone: 17822909000,
 					status: true,
 					done: "操作",
+						id:2
 				},
 				{
 					date: "2016-05-01",
@@ -121,6 +159,7 @@ export default {
 					phone: 18776750000,
 					status: false,
 					done: "操作",
+						id:3
 				},
 				{
 					date: "2016-05-03",
@@ -130,8 +169,9 @@ export default {
 					phone: 15922899000,
 					status: false,
 					done: "操作",
+						id:4
 				},
-					{
+				{
 					date: "2054-05-03",
 					name: "黑七",
 					address: "5341601000@qq.com",
@@ -139,8 +179,9 @@ export default {
 					phone: 13226770000,
 					status: false,
 					done: "操作",
+						id:5
 				},
-					{
+				{
 					date: "2044-05-03",
 					name: "孙九",
 					address: "6341601000@qq.com",
@@ -148,12 +189,22 @@ export default {
 					phone: 18723110000,
 					status: true,
 					done: "操作",
+						id:6
 				},
 			],
 			pagenum: 1,
 			pagesize: 2,
 			//分页
 			total: 0,
+			//添加用户弹出框
+			dialogFormVisibleAdd: false,
+			form: {
+				//看接口文档
+				username: "",
+				password: "",
+				email: "",
+				mobile: "",
+			},
 		};
 	},
 	created() {
@@ -174,6 +225,63 @@ export default {
 		handleCurrentChange(val) {
 			console.log(`当前页: ${val}`);
 		},
+		//搜索用户
+		searchUser() {
+			//发送请求
+			// query已经双向绑定
+			this.getUserList();
+		},
+		//	在点击由 clearable 属性生成的清空按钮时触发
+		loadlist() {
+			//重新发送请求
+			console.log("重新请求");
+		},
+		//展示添加用户对话框
+		showAddUserDialog() {
+			this.dialogFormVisibleAdd = true;
+		},
+		// 点击确定添加  发送请求
+		addUser() {
+			console.log("确定添加");
+			this.dialogFormVisibleAdd = false;
+			// const res= await this.$http.post('user',this.form)
+			//提示成功   关闭对话框  刷新视图   输入框清空
+			this.$message.success("成功、失败");
+			this.form = {};
+			//清空输入框的方法2   遍历
+			// for (const key in this.form) {
+			// 	if (this.form.hasOwnProperty(key)) {
+				//hasOwnProperty  判断是自己的属性而不是父级的
+			// 		this.form[key] = "";
+			// 	}
+			// }
+			// this.getUserList()  刷新视图
+		},
+		//删除用户  打开消息盒子
+		showDeleteUserMsgBox(id){
+			 this.$confirm('删除用户?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then( () => {
+					//发送删除的请求  参数为id  注意async 写在then()箭头函数前面then(async () => {
+					//先找data里有没有id
+					//或者	showDeleteUserMsgBox()  调用这个方法时传进来id
+					console.log(`删除id为${id}的用户`)
+			//  const res = 		this.$http.delete('user/:${id}')
+			//  const res = 	await	this.$http.delete('user/:id')
+			//刷新视图  执行getuserlist
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+          });
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });
+        });
+		}
 	},
 };
 </script>
