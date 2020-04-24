@@ -51,13 +51,41 @@ slot-scope会自动去找上一级数据源，肯定会找到userlist ,所以写
 			</el-table-column>
 			<el-table-column prop="done" label="操作">
 				<template slot-scope="scope">
-					<el-button size="mini" plain type="primary" icon="el-icon-edit" circle></el-button>
-					<el-button size="mini" plain type="success" icon="el-icon-check" circle></el-button>
-					<el-button size="mini" plain type="danger" icon="el-icon-delete" circle></el-button>
+					<el-button
+						size="mini"
+						plain
+						type="primary"
+						icon="el-icon-edit"
+						circle
+					></el-button>
+					<el-button
+						size="mini"
+						plain
+						type="success"
+						icon="el-icon-check"
+						circle
+					></el-button>
+					<el-button
+						size="mini"
+						plain
+						type="danger"
+						icon="el-icon-delete"
+						circle
+					></el-button>
 				</template>
 			</el-table-column>
 		</el-table>
 		<!-- 分页 -->
+		<el-pagination
+			@size-change="handleSizeChange"
+			@current-change="handleCurrentChange"
+			:current-page="pagenum"
+			:page-sizes="[1, 2, 3, 4]"
+			:page-size="pagesize"
+			layout="total, sizes, prev, pager, next, jumper"
+			:total="userList.length"
+		>
+		</el-pagination>
 	</el-card>
 </template>
 <script>
@@ -69,38 +97,56 @@ export default {
 			userList: [
 				{
 					date: "2016-05-02",
-					name: "王小虎",
+					name: "张三",
 					address: "1341601000@qq.com",
 					create_time: new Date().getTime(),
-					phone: 18722220000,
+					phone: 15554320000,
 					status: true,
 					done: "操作",
 				},
 				{
 					date: "2016-05-04",
-					name: "王小虎",
-					address: "1341601000@qq.com",
+					name: "李四",
+					address: "2341601000@qq.com",
 					create_time: new Date().getTime(),
-					phone: 18722220000,
+					phone: 17822909000,
 					status: true,
 					done: "操作",
 				},
 				{
 					date: "2016-05-01",
-					name: "王小虎",
-					address: "1341601000@qq.com",
+					name: "王五",
+					address: "3341601000@qq.com",
 					create_time: new Date().getTime(),
-					phone: 18722220000,
+					phone: 18776750000,
 					status: false,
 					done: "操作",
 				},
 				{
 					date: "2016-05-03",
-					name: "王小虎",
-					address: "1341601000@qq.com",
+					name: "赵六",
+					address: "4341601000@qq.com",
 					create_time: new Date().getTime(),
-					phone: 18722220000,
+					phone: 15922899000,
 					status: false,
+					done: "操作",
+				},
+					{
+					date: "2054-05-03",
+					name: "黑七",
+					address: "5341601000@qq.com",
+					create_time: new Date().getTime(),
+					phone: 13226770000,
+					status: false,
+					done: "操作",
+				},
+					{
+					date: "2044-05-03",
+					name: "孙九",
+					address: "6341601000@qq.com",
+					create_time: new Date().getTime(),
+					phone: 18723110000,
+					status: true,
 					done: "操作",
 				},
 			],
@@ -120,6 +166,13 @@ export default {
 			const res = await this.$http.get(
 				`users?query=${this.query}&pagenum=${this.pagenum}&pagesize=${this.pagesize}`
 			);
+		},
+		//分页相关方法
+		handleSizeChange(val) {
+			console.log(`每页 ${val} 条`);
+		},
+		handleCurrentChange(val) {
+			console.log(`当前页: ${val}`);
 		},
 	},
 };
