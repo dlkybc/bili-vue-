@@ -38,8 +38,24 @@ slot-scope会自动去找上一级数据源，肯定会找到userlist ,所以写
 				</template>
 				<!-- 不用写prop -->
 			</el-table-column>
-			<el-table-column prop="status" label="用户状态"> </el-table-column>
-			<el-table-column prop="done" label="操作"> </el-table-column>
+			<!-- <el-table-column prop="status" label="用户状态"> -->
+			<el-table-column label="用户状态">
+				<template slot-scope="sco">
+					<el-switch
+						v-model="sco.row.status"
+						active-color="#13ce66"
+						inactive-color="#ff4949"
+					>
+					</el-switch>
+				</template>
+			</el-table-column>
+			<el-table-column prop="done" label="操作">
+				<template slot-scope="scope">
+					<el-button size="mini" plain type="primary" icon="el-icon-edit" circle></el-button>
+					<el-button size="mini" plain type="success" icon="el-icon-check" circle></el-button>
+					<el-button size="mini" plain type="danger" icon="el-icon-delete" circle></el-button>
+				</template>
+			</el-table-column>
 		</el-table>
 		<!-- 分页 -->
 	</el-card>
@@ -57,7 +73,7 @@ export default {
 					address: "1341601000@qq.com",
 					create_time: new Date().getTime(),
 					phone: 18722220000,
-					status: "false",
+					status: true,
 					done: "操作",
 				},
 				{
@@ -66,7 +82,7 @@ export default {
 					address: "1341601000@qq.com",
 					create_time: new Date().getTime(),
 					phone: 18722220000,
-					status: "false",
+					status: true,
 					done: "操作",
 				},
 				{
@@ -75,7 +91,7 @@ export default {
 					address: "1341601000@qq.com",
 					create_time: new Date().getTime(),
 					phone: 18722220000,
-					status: "false",
+					status: false,
 					done: "操作",
 				},
 				{
@@ -84,7 +100,7 @@ export default {
 					address: "1341601000@qq.com",
 					create_time: new Date().getTime(),
 					phone: 18722220000,
-					status: "false",
+					status: false,
 					done: "操作",
 				},
 			],
